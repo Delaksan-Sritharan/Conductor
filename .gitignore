@@ -1,0 +1,5 @@
+node_modules
+dist
+*.vsix
+.devflow/state.json
+.DS_Store

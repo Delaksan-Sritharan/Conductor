@@ -1,0 +1,32 @@
+{
+  "name": "devflow",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @devflow/core && npm run build -w @devflow/cli && npm run build -w devflow-vscode",
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/cli --noEmit && tsc -p packages/vscode --noEmit",
+    "devflow": "node packages/cli/dist/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  },
+  "description": "Start multi-service dev environments in dependency order, waiting for each service to be ready.",
+  "license": "MIT",
+  "author": "Delaksan Sritharan",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Delaksan-Sritharan/DevFlow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Delaksan-Sritharan/DevFlow/issues"
+  },
+  "homepage": "https://github.com/Delaksan-Sritharan/DevFlow#readme"
+}
