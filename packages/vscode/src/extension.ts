@@ -10,7 +10,7 @@ import {
   runDoctor,
   type ProjectConfig,
   type ServiceStatus,
-} from "@devflow/core";
+} from "@conductor/core";
 import { ACTIVE, ServiceItem, ServiceTreeProvider } from "./serviceTree.js";
 import { ServiceTerminals } from "./terminals.js";
 
@@ -24,16 +24,16 @@ let unsubscribe: (() => void)[] = [];
 
 export function activate(context: vscode.ExtensionContext): void {
   const terminals = new ServiceTerminals();
-  const output = vscode.window.createOutputChannel("DevFlow");
+  const output = vscode.window.createOutputChannel("Conductor");
   const tree = new ServiceTreeProvider(
     () => project,
     () => engine?.getStates() ?? [],
     () => configError,
   );
   const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
-  context.subscriptions.push(terminals, output, statusBar, vscode.window.registerTreeDataProvider("devflow.services", tree));
+  context.subscriptions.push(terminals, output, statusBar, vscode.window.registerTreeDataProvider("conductor.services", tree));
 
-  const setContext = (key: string, value: boolean) => vscode.commands.executeCommand("setContext", `devflow.${key}`, value);
+  const setContext = (key: string, value: boolean) => vscode.commands.executeCommand("setContext", `conductor.${key}`, value);
 
   const isActive = () => !!engine && engine.getStates().some((s) => ACTIVE.includes(s.status));
 
@@ -47,9 +47,9 @@ export function activate(context: vscode.ExtensionContext): void {
     const states = engine.getStates();
     const running = states.filter((s) => s.status === "running" || s.status === "completed").length;
     const bad = states.some((s) => s.status === "failed" || s.status === "crashed");
-    statusBar.text = `${bad ? "$(error)" : "$(server-process)"} DevFlow ${running}/${states.length}`;
-    statusBar.tooltip = isActive() ? "DevFlow: click to stop all services" : "DevFlow: click to start all services";
-    statusBar.command = isActive() ? "devflow.stopAll" : "devflow.startAll";
+    statusBar.text = `${bad ? "$(error)" : "$(server-process)"} Conductor ${running}/${states.length}`;
+    statusBar.tooltip = isActive() ? "Conductor: click to stop all services" : "Conductor: click to start all services";
+    statusBar.command = isActive() ? "conductor.stopAll" : "conductor.startAll";
     statusBar.backgroundColor = bad ? new vscode.ThemeColor("statusBarItem.errorBackground") : undefined;
     statusBar.show();
   }
@@ -97,7 +97,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const message = e instanceof Error ? e.message : String(e);
       if (e instanceof Error && e.name === "CancelledError") return;
       output.appendLine(`${what} failed: ${message}`);
-      const choice = await vscode.window.showErrorMessage(`DevFlow: ${message}`, "Show Output");
+      const choice = await vscode.window.showErrorMessage(`Conductor: ${message}`, "Show Output");
       if (choice) output.show();
     }
   }
@@ -105,8 +105,8 @@ export function activate(context: vscode.ExtensionContext): void {
   function requireEngine(): Engine | undefined {
     if (!engine) {
       void vscode.window
-        .showWarningMessage(configError ? "DevFlow config has errors." : "No DevFlow config in this workspace.", configError ? "Open Config" : "Create Config")
-        .then((c) => c && vscode.commands.executeCommand(configError ? "devflow.openConfig" : "devflow.init"));
+        .showWarningMessage(configError ? "Conductor config has errors." : "No Conductor config in this workspace.", configError ? "Open Config" : "Create Config")
+        .then((c) => c && vscode.commands.executeCommand(configError ? "conductor.openConfig" : "conductor.init"));
     }
     return engine;
   }
@@ -130,7 +130,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const reg = (id: string, fn: (...args: any[]) => unknown) => context.subscriptions.push(vscode.commands.registerCommand(id, fn));
 
-  reg("devflow.startAll", () =>
+  reg("conductor.startAll", () =>
     guarded("start", async () => {
       const eng = requireEngine();
       if (!eng) return;
@@ -139,14 +139,14 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
 
-  reg("devflow.stopAll", () =>
+  reg("conductor.stopAll", () =>
     guarded("stop", async () => {
       await engine?.stop();
       if (pendingReload) load();
     }),
   );
 
-  reg("devflow.restartAll", () =>
+  reg("conductor.restartAll", () =>
     guarded("restart", async () => {
       await engine?.stop();
       if (pendingReload) load();
@@ -157,7 +157,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
 
-  reg("devflow.startService", (arg?: unknown) =>
+  reg("conductor.startService", (arg?: unknown) =>
     guarded("start service", async () => {
       const name = await pickService(arg, "Start which service?");
       if (!name || !engine) return;
@@ -167,14 +167,14 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
 
-  reg("devflow.stopService", (arg?: unknown) =>
+  reg("conductor.stopService", (arg?: unknown) =>
     guarded("stop service", async () => {
       const name = await pickService(arg, "Stop which service?");
       if (name) await engine?.stop([name]);
     }),
   );
 
-  reg("devflow.restartService", (arg?: unknown) =>
+  reg("conductor.restartService", (arg?: unknown) =>
     guarded("restart service", async () => {
       const name = await pickService(arg, "Restart which service?");
       if (!name || !engine) return;
@@ -183,12 +183,12 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
 
-  reg("devflow.showLogs", async (arg?: unknown) => {
+  reg("conductor.showLogs", async (arg?: unknown) => {
     const name = await pickService(arg, "Show logs for which service?");
     if (name) terminals.show(name);
   });
 
-  reg("devflow.doctor", () =>
+  reg("conductor.doctor", () =>
     guarded("doctor", async () => {
       if (!project) return void requireEngine();
       const results = await runDoctor(project);
@@ -201,18 +201,18 @@ export function activate(context: vscode.ExtensionContext): void {
       }
       const errors = results.filter((r) => r.level === "error").length;
       output.show(true);
-      if (errors) void vscode.window.showWarningMessage(`DevFlow doctor found ${errors} problem${errors === 1 ? "" : "s"}.`, "Show Output").then((c) => c && output.show());
-      else void vscode.window.showInformationMessage("DevFlow doctor: everything looks good.");
+      if (errors) void vscode.window.showWarningMessage(`Conductor doctor found ${errors} problem${errors === 1 ? "" : "s"}.`, "Show Output").then((c) => c && output.show());
+      else void vscode.window.showInformationMessage("Conductor doctor: everything looks good.");
     }),
   );
 
-  reg("devflow.openConfig", async () => {
+  reg("conductor.openConfig", async () => {
     const file = project?.configPath ?? (vscode.workspace.workspaceFolders?.[0] && findConfigFile(vscode.workspace.workspaceFolders[0].uri.fsPath));
-    if (!file) return void vscode.commands.executeCommand("devflow.init");
+    if (!file) return void vscode.commands.executeCommand("conductor.init");
     await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(file));
   });
 
-  reg("devflow.init", async () => {
+  reg("conductor.init", async () => {
     const folder = vscode.workspace.workspaceFolders?.[0];
     if (!folder) return void vscode.window.showWarningMessage("Open a folder first.");
     const dir = path.join(folder.uri.fsPath, CONFIG_DIR);
@@ -226,15 +226,15 @@ export function activate(context: vscode.ExtensionContext): void {
     await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(file));
   });
 
-  reg("devflow.refresh", () => {
+  reg("conductor.refresh", () => {
     if (isActive()) {
       pendingReload = true;
-      void vscode.window.showInformationMessage("DevFlow: services are running. The config will reload when they stop.");
+      void vscode.window.showInformationMessage("Conductor: services are running. The config will reload when they stop.");
     } else load();
   });
 
   const watcher = vscode.workspace.createFileSystemWatcher(`**/${CONFIG_DIR}/config.{yaml,yml}`);
-  const onConfigChange = () => (isActive() ? ((pendingReload = true), void vscode.window.showInformationMessage("DevFlow config changed. Restart services to apply it.")) : load());
+  const onConfigChange = () => (isActive() ? ((pendingReload = true), void vscode.window.showInformationMessage("Conductor config changed. Restart services to apply it.")) : load());
   watcher.onDidChange(onConfigChange);
   watcher.onDidCreate(onConfigChange);
   watcher.onDidDelete(onConfigChange);

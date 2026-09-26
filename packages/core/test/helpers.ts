@@ -32,7 +32,7 @@ export function server(name: string, port: number, opts: { delay?: number; depen
 }
 
 export function project(services: ServiceConfig[]): ProjectConfig {
-  return { root: FIXTURES, configPath: path.join(FIXTURES, ".devflow", "config.yaml"), services };
+  return { root: FIXTURES, configPath: path.join(FIXTURES, ".conductor", "config.yaml"), services };
 }
 
 /** Records "name:status" strings in order. */

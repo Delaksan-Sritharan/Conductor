@@ -57,7 +57,7 @@ export class ServiceTerminals implements vscode.Disposable {
     const existing = this.live.get(name);
     if (existing) return existing.terminal;
     const pty = new LogPty(() => this.buffer(name));
-    const terminal = vscode.window.createTerminal({ name: `DevFlow: ${name}`, pty, iconPath: new vscode.ThemeIcon("server-process") });
+    const terminal = vscode.window.createTerminal({ name: `Conductor: ${name}`, pty, iconPath: new vscode.ThemeIcon("server-process") });
     this.live.set(name, { pty, terminal });
     return terminal;
   }
@@ -70,9 +70,9 @@ export class ServiceTerminals implements vscode.Disposable {
     this.push(name, `${text}\r\n`);
   }
 
-  /** A dim `[devflow]` marker line, used for lifecycle events. */
+  /** A dim `[conductor]` marker line, used for lifecycle events. */
   note(name: string, text: string): void {
-    this.line(name, `\u001b[2m[devflow] ${text}\u001b[0m`);
+    this.line(name, `\u001b[2m[conductor] ${text}\u001b[0m`);
   }
 
   clear(name: string): void {

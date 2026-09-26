@@ -1,11 +1,11 @@
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { CONFIG_DIR, isGroupAlive, type ProjectConfig, type ServiceStatus } from "@devflow/core";
+import { CONFIG_DIR, isGroupAlive, type ProjectConfig, type ServiceStatus } from "@conductor/core";
 
 /**
- * `.devflow/state.json` lets `devflow stop` and `devflow status` (separate
- * processes) find a running `devflow start`, and clean up after a hard kill.
+ * `.conductor/state.json` lets `conductor stop` and `conductor status` (separate
+ * processes) find a running `conductor start`, and clean up after a hard kill.
  */
 export interface StateFile {
   cliPid: number;

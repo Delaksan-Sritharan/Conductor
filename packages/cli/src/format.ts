@@ -1,4 +1,4 @@
-import type { ServiceStatus } from "@devflow/core";
+import type { ServiceStatus } from "@conductor/core";
 
 const enabled = !process.env.NO_COLOR && (process.stdout.isTTY || !!process.env.FORCE_COLOR);
 const wrap = (open: number, close: number) => (s: string) => (enabled ? `\u001b[${open}m${s}\u001b[${close}m` : s);

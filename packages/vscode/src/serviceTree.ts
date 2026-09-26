@@ -1,6 +1,6 @@
 import * as path from "node:path";
 import * as vscode from "vscode";
-import { describeCheck, type ProjectConfig, type ServiceState, type ServiceStatus } from "@devflow/core";
+import { describeCheck, type ProjectConfig, type ServiceState, type ServiceStatus } from "@conductor/core";
 
 const ICONS: Record<ServiceStatus, vscode.ThemeIcon> = {
   pending: new vscode.ThemeIcon("clock", new vscode.ThemeColor("disabledForeground")),
@@ -29,7 +29,7 @@ export class ServiceItem extends vscode.TreeItem {
     this.description = [showDetail ? `${state.status} · ${state.detail}` : state.status, port].filter(Boolean).join(" · ");
     this.iconPath = ICONS[state.status];
     this.contextValue = ACTIVE.includes(state.status) ? "service.active" : "service.inactive";
-    this.command = { command: "devflow.showLogs", title: "Show Logs", arguments: [serviceName] };
+    this.command = { command: "conductor.showLogs", title: "Show Logs", arguments: [serviceName] };
 
     const tip = new vscode.MarkdownString(undefined, true);
     tip.appendMarkdown(`**${serviceName}** — ${state.status}\n\n`);
@@ -48,7 +48,7 @@ class MessageItem extends vscode.TreeItem {
     super(message, vscode.TreeItemCollapsibleState.None);
     this.iconPath = new vscode.ThemeIcon("warning", new vscode.ThemeColor("problemsWarningIcon.foreground"));
     this.tooltip = tooltip;
-    this.command = { command: "devflow.openConfig", title: "Open Config" };
+    this.command = { command: "conductor.openConfig", title: "Open Config" };
   }
 }
 

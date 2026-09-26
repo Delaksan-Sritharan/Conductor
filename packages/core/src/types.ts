@@ -19,7 +19,7 @@ export interface ServiceConfig {
 }
 
 export interface ProjectConfig {
-  /** Directory that contains `.devflow/`. */
+  /** Directory that contains `.conductor/`. */
   root: string;
   configPath: string;
   services: ServiceConfig[];

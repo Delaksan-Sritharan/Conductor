@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "DevFlow config",
+  "title": "Conductor config",
   "type": "object",
   "required": ["services"],
   "additionalProperties": false,
@@ -28,7 +28,7 @@
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string", "description": "Only needed in list form." },
-        "path": { "type": "string", "default": ".", "description": "Working directory, relative to the project root (the folder containing .devflow/)." },
+        "path": { "type": "string", "default": ".", "description": "Working directory, relative to the project root (the folder containing .conductor/)." },
         "command": { "type": "string", "description": "Shell command that starts the service, e.g. `npm run dev`." },
         "depends_on": { "$ref": "#/definitions/stringOrList", "description": "Services that must be ready before this one starts." },
         "wait_for": { "$ref": "#/definitions/waitFor" },
@@ -42,7 +42,7 @@
       }
     },
     "waitFor": {
-      "description": "How DevFlow decides the service is ready. Default: the process stays alive for about a second.",
+      "description": "How Conductor decides the service is ready. Default: the process stays alive for about a second.",
       "anyOf": [
         {
           "type": "object", "required": ["type", "value"], "additionalProperties": false,

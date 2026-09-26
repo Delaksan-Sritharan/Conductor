@@ -1,12 +1,12 @@
 # Contributing
 
-Thanks for your interest in DevFlow.
+Thanks for your interest in Conductor.
 
 ## Setup
 
 ```bash
-git clone https://github.com/Delaksan-Sritharan/DevFlow.git
-cd DevFlow
+git clone https://github.com/Delaksan-Sritharan/Conductor.git
+cd Conductor
 npm install
 npm run build
 npm test
@@ -17,7 +17,7 @@ Requires Node 22 or newer.
 ## Layout
 
 - `packages/core`: the engine (no VS Code dependency). Most changes belong here.
-- `packages/cli`: the `devflow` command.
+- `packages/cli`: the `conductor` command.
 - `packages/vscode`: the extension. It bundles core with esbuild.
 - `examples/demo`: a three-service project that fails if started out of order.
 
@@ -26,7 +26,7 @@ Requires Node 22 or newer.
 - Add or update tests in `packages/core/test` for engine changes. `npm test` must pass and `npm run typecheck` must be clean.
 - Keep commits small and focused, with [Conventional Commits](https://www.conventionalcommits.org/) subjects
   (`feat(core): ...`, `fix(cli): ...`, `docs: ...`), imperative mood, 50 characters or fewer.
-- To try the extension, run `npm run package -w devflow-vscode` and install `packages/vscode/devflow.vsix`.
+- To try the extension, run `npm run package -w conductor-vscode` and install `packages/vscode/conductor.vsix`.
 
 ## Releasing (maintainers)
 

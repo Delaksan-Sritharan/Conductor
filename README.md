@@ -1,4 +1,4 @@
-# DevFlow
+# Conductor
 
 Start a multi-service dev environment with one command. Services start in dependency order, and each one
 only starts **after the services it depends on are actually ready**, not after a guessed `sleep 5`.
@@ -22,19 +22,19 @@ node ../../packages/cli/dist/index.js start
 In your own project:
 
 ```bash
-devflow init        # writes .devflow/config.yaml
-devflow doctor      # checks dirs, commands, ports
-devflow start       # starts everything, streams logs, Ctrl+C stops in reverse order
+conductor init        # writes .conductor/config.yaml
+conductor doctor      # checks dirs, commands, ports
+conductor start       # starts everything, streams logs, Ctrl+C stops in reverse order
 ```
 
-To get the `devflow` command on your PATH: `npm link -w @devflow/cli`.
+To get the `conductor` command on your PATH: `npm link -w @conductor/cli`.
 
-## Config: `.devflow/config.yaml`
+## Config: `.conductor/config.yaml`
 
 ```yaml
 services:
   entity-service:
-    path: ./entity-service        # relative to the folder containing .devflow/ (default ".")
+    path: ./entity-service        # relative to the folder containing .conductor/ (default ".")
     command: npm run dev
     wait_for: { type: port, value: 8081 }
 
@@ -44,7 +44,7 @@ services:
     depends_on: [entity-service]
     timeout: 180                  # seconds to wait for readiness (default 120)
     env: { SPRING_PROFILES_ACTIVE: dev }
-    requires: [java]              # checked by `devflow doctor`
+    requires: [java]              # checked by `conductor doctor`
     wait_for: { type: http, url: "http://localhost:8080/health" }
 
   frontend:
@@ -69,12 +69,12 @@ started is stopped again and the reason is printed. Services with no dependency 
 
 | Command | |
 | --- | --- |
-| `devflow init` | create a starter config |
-| `devflow start [services...]` | start all, or the named services plus their dependencies |
-| `devflow stop` | stop a running `devflow start` from another terminal (also cleans up after a `kill -9`) |
-| `devflow status` | what is running |
-| `devflow doctor` | check directories, commands, required tools, and busy ports |
-| `devflow graph` | show start order |
+| `conductor init` | create a starter config |
+| `conductor start [services...]` | start all, or the named services plus their dependencies |
+| `conductor stop` | stop a running `conductor start` from another terminal (also cleans up after a `kill -9`) |
+| `conductor status` | what is running |
+| `conductor doctor` | check directories, commands, required tools, and busy ports |
+| `conductor graph` | show start order |
 
 ## VS Code extension
 
@@ -83,8 +83,8 @@ item, and autocomplete and validation for the config (with the Red Hat YAML exte
 
 ```bash
 npm run build
-npm run package -w devflow-vscode          # -> packages/vscode/devflow.vsix
-code --install-extension packages/vscode/devflow.vsix
+npm run package -w conductor-vscode          # -> packages/vscode/conductor.vsix
+code --install-extension packages/vscode/conductor.vsix
 ```
 
 Restarting a single service leaves its dependents running. Stopping a service also stops the services that
@@ -94,7 +94,7 @@ depend on it (dependents first).
 
 ```
 packages/core     engine: config, graph, process manager, readiness checks, doctor (no VS Code dependency)
-packages/cli      `devflow` command
+packages/cli      `conductor` command
 packages/vscode   extension (bundles core)
 examples/demo     three-service demo
 ```
@@ -111,7 +111,7 @@ npm run typecheck
 - Services run without a PTY, so interactive prompts don't work and some tools disable colour
   (`FORCE_COLOR=1` is set to help). Fine for servers and watchers.
 - Developed and tested on macOS. Process-tree stopping on Windows uses `taskkill /T /F` (no graceful
-  shutdown) and `devflow stop`'s orphan cleanup is POSIX only; neither is tested.
+  shutdown) and `conductor stop`'s orphan cleanup is POSIX only; neither is tested.
 - Multi-root workspaces use the first folder.
 
 ## Contributing

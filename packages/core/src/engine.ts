@@ -116,7 +116,7 @@ export class Engine extends TypedEmitter<EngineEvents> {
       const { waitFor } = this.graph.get(name);
       if (waitFor.type !== "port") continue;
       if (await isPortOpen(waitFor.port, waitFor.host)) {
-        throw new StartupError(name, `port ${waitFor.port} is already in use (stop whatever is using it, or run \`devflow doctor\`)`);
+        throw new StartupError(name, `port ${waitFor.port} is already in use (stop whatever is using it, or run \`conductor doctor\`)`);
       }
     }
   }

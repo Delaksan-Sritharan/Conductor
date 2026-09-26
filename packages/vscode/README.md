@@ -1,4 +1,4 @@
-# DevFlow – Service Orchestrator
+# Conductor – Service Orchestrator
 
 Start a multi-service dev environment with one click. Services start **in dependency order**, and each one
 only starts **after the services it depends on are actually ready**, not after a guessed `sleep 5`.
@@ -8,7 +8,7 @@ entity-service ──► backend ──► frontend
    port 8081       /health      "Local:" in logs
 ```
 
-Describe your services once in `.devflow/config.yaml`, commit it, and everyone on the team boots the same way.
+Describe your services once in `.conductor/config.yaml`, commit it, and everyone on the team boots the same way.
 
 ## Features
 
@@ -23,8 +23,8 @@ Describe your services once in `.devflow/config.yaml`, commit it, and everyone o
 ## Getting started
 
 1. Open your project folder.
-2. Run **DevFlow: Create Config** from the Command Palette (or click the button in the DevFlow sidebar).
-3. Edit `.devflow/config.yaml`:
+2. Run **Conductor: Create Config** from the Command Palette (or click the button in the Conductor sidebar).
+3. Edit `.conductor/config.yaml`:
 
 ```yaml
 services:
@@ -47,13 +47,13 @@ services:
     wait_for: { type: output, contains: "Local:" }
 ```
 
-4. Open the **DevFlow** view in the activity bar and press **Start All**.
+4. Open the **Conductor** view in the activity bar and press **Start All**.
 
 ## Configuration
 
 | Field | Description |
 | --- | --- |
-| `path` | Working directory, relative to the folder containing `.devflow/` (default `.`) |
+| `path` | Working directory, relative to the folder containing `.conductor/` (default `.`) |
 | `command` | Shell command that starts the service |
 | `depends_on` | Services that must be ready first |
 | `wait_for` | How to tell the service is ready (below). Default: the process is still alive after ~1s |
@@ -71,7 +71,7 @@ services:
 
 ## Commands
 
-All under **DevFlow:** in the Command Palette: Start All, Stop All, Restart All, Start / Stop / Restart Service,
+All under **Conductor:** in the Command Palette: Start All, Stop All, Restart All, Start / Stop / Restart Service,
 Show Service Logs, Doctor, Open Config, Create Config, Reload Config.
 
 Restarting one service leaves its dependents running. Stopping one service also stops the services that depend on it.
@@ -84,8 +84,8 @@ Restarting one service leaves its dependents running. Stopping one service also 
 
 ## Also available as a CLI
 
-The same engine powers a `devflow` command line tool. See the
-[project repository](https://github.com/Delaksan-Sritharan/DevFlow).
+The same engine powers a `conductor` command line tool. See the
+[project repository](https://github.com/Delaksan-Sritharan/Conductor).
 
 ## License
 

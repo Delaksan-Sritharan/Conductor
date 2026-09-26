@@ -19,16 +19,16 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
-      - run: npm run package -w devflow-vscode
+      - run: npm run package -w conductor-vscode
       - name: Publish to VS Code Marketplace
-        run: npx vsce publish --packagePath packages/vscode/devflow.vsix -p "$VSCE_PAT"
+        run: npx vsce publish --packagePath packages/vscode/conductor.vsix -p "$VSCE_PAT"
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
       - name: Publish to Open VSX
-        run: npx ovsx publish packages/vscode/devflow.vsix -p "$OVSX_PAT"
+        run: npx ovsx publish packages/vscode/conductor.vsix -p "$OVSX_PAT"
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
       - uses: softprops/action-gh-release@v2
         with:
-          files: packages/vscode/devflow.vsix
+          files: packages/vscode/conductor.vsix
           generate_release_notes: true

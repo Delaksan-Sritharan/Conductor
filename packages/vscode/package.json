@@ -1,6 +1,6 @@
 {
-  "name": "devflow-vscode",
-  "displayName": "DevFlow – Service Orchestrator",
+  "name": "conductor-vscode",
+  "displayName": "Conductor – Service Orchestrator",
   "description": "Start your dev services in dependency order, each one only once the previous is actually ready.",
   "version": "0.1.0",
   "publisher": "delaksan-sritharan",
@@ -26,173 +26,173 @@
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
-    "workspaceContains:.devflow/config.yaml",
-    "workspaceContains:.devflow/config.yml"
+    "workspaceContains:.conductor/config.yaml",
+    "workspaceContains:.conductor/config.yml"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "devflow.startAll",
+        "command": "conductor.startAll",
         "title": "Start All",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(play)"
       },
       {
-        "command": "devflow.stopAll",
+        "command": "conductor.stopAll",
         "title": "Stop All",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(debug-stop)"
       },
       {
-        "command": "devflow.restartAll",
+        "command": "conductor.restartAll",
         "title": "Restart All",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(debug-restart)"
       },
       {
-        "command": "devflow.startService",
+        "command": "conductor.startService",
         "title": "Start Service (with dependencies)",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(play)"
       },
       {
-        "command": "devflow.stopService",
+        "command": "conductor.stopService",
         "title": "Stop Service (and dependents)",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(debug-stop)"
       },
       {
-        "command": "devflow.restartService",
+        "command": "conductor.restartService",
         "title": "Restart Service",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(debug-restart)"
       },
       {
-        "command": "devflow.showLogs",
+        "command": "conductor.showLogs",
         "title": "Show Service Logs",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(terminal)"
       },
       {
-        "command": "devflow.doctor",
+        "command": "conductor.doctor",
         "title": "Doctor (check environment)",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(checklist)"
       },
       {
-        "command": "devflow.openConfig",
+        "command": "conductor.openConfig",
         "title": "Open Config",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(gear)"
       },
       {
-        "command": "devflow.init",
+        "command": "conductor.init",
         "title": "Create Config",
-        "category": "DevFlow"
+        "category": "Conductor"
       },
       {
-        "command": "devflow.refresh",
+        "command": "conductor.refresh",
         "title": "Reload Config",
-        "category": "DevFlow",
+        "category": "Conductor",
         "icon": "$(refresh)"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "devflow",
-          "title": "DevFlow",
-          "icon": "media/devflow.svg"
+          "id": "conductor",
+          "title": "Conductor",
+          "icon": "media/conductor.svg"
         }
       ]
     },
     "views": {
-      "devflow": [
+      "conductor": [
         {
-          "id": "devflow.services",
+          "id": "conductor.services",
           "name": "Services"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "devflow.services",
-        "contents": "No DevFlow config found in this workspace.\n[Create Config](command:devflow.init)\nDescribe your services once in `.devflow/config.yaml`, then start them all in the right order with one click.",
-        "when": "!devflow.hasConfig"
+        "view": "conductor.services",
+        "contents": "No Conductor config found in this workspace.\n[Create Config](command:conductor.init)\nDescribe your services once in `.conductor/config.yaml`, then start them all in the right order with one click.",
+        "when": "!conductor.hasConfig"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "devflow.startAll",
-          "when": "view == devflow.services && devflow.hasConfig && !devflow.active",
+          "command": "conductor.startAll",
+          "when": "view == conductor.services && conductor.hasConfig && !conductor.active",
           "group": "navigation@1"
         },
         {
-          "command": "devflow.stopAll",
-          "when": "view == devflow.services && devflow.hasConfig && devflow.active",
+          "command": "conductor.stopAll",
+          "when": "view == conductor.services && conductor.hasConfig && conductor.active",
           "group": "navigation@1"
         },
         {
-          "command": "devflow.restartAll",
-          "when": "view == devflow.services && devflow.hasConfig && devflow.active",
+          "command": "conductor.restartAll",
+          "when": "view == conductor.services && conductor.hasConfig && conductor.active",
           "group": "navigation@2"
         },
         {
-          "command": "devflow.doctor",
-          "when": "view == devflow.services && devflow.hasConfig",
+          "command": "conductor.doctor",
+          "when": "view == conductor.services && conductor.hasConfig",
           "group": "navigation@3"
         },
         {
-          "command": "devflow.openConfig",
-          "when": "view == devflow.services && devflow.hasConfig",
+          "command": "conductor.openConfig",
+          "when": "view == conductor.services && conductor.hasConfig",
           "group": "navigation@4"
         },
         {
-          "command": "devflow.refresh",
-          "when": "view == devflow.services",
+          "command": "conductor.refresh",
+          "when": "view == conductor.services",
           "group": "navigation@5"
         }
       ],
       "view/item/context": [
         {
-          "command": "devflow.showLogs",
-          "when": "view == devflow.services && viewItem =~ /^service\\./",
+          "command": "conductor.showLogs",
+          "when": "view == conductor.services && viewItem =~ /^service\\./",
           "group": "inline@1"
         },
         {
-          "command": "devflow.startService",
-          "when": "view == devflow.services && viewItem == service.inactive",
+          "command": "conductor.startService",
+          "when": "view == conductor.services && viewItem == service.inactive",
           "group": "inline@2"
         },
         {
-          "command": "devflow.restartService",
-          "when": "view == devflow.services && viewItem == service.active",
+          "command": "conductor.restartService",
+          "when": "view == conductor.services && viewItem == service.active",
           "group": "inline@2"
         },
         {
-          "command": "devflow.stopService",
-          "when": "view == devflow.services && viewItem == service.active",
+          "command": "conductor.stopService",
+          "when": "view == conductor.services && viewItem == service.active",
           "group": "inline@3"
         },
         {
-          "command": "devflow.startService",
-          "when": "view == devflow.services && viewItem == service.inactive",
+          "command": "conductor.startService",
+          "when": "view == conductor.services && viewItem == service.inactive",
           "group": "1_run@1"
         },
         {
-          "command": "devflow.restartService",
-          "when": "view == devflow.services && viewItem == service.active",
+          "command": "conductor.restartService",
+          "when": "view == conductor.services && viewItem == service.active",
           "group": "1_run@1"
         },
         {
-          "command": "devflow.stopService",
-          "when": "view == devflow.services && viewItem == service.active",
+          "command": "conductor.stopService",
+          "when": "view == conductor.services && viewItem == service.active",
           "group": "1_run@2"
         },
         {
-          "command": "devflow.showLogs",
-          "when": "view == devflow.services && viewItem =~ /^service\\./",
+          "command": "conductor.showLogs",
+          "when": "view == conductor.services && viewItem =~ /^service\\./",
           "group": "2_view@1"
         }
       ]
@@ -200,20 +200,20 @@
     "yamlValidation": [
       {
         "fileMatch": [
-          ".devflow/config.yaml",
-          ".devflow/config.yml"
+          ".conductor/config.yaml",
+          ".conductor/config.yml"
         ],
-        "url": "./schema/devflow.schema.json"
+        "url": "./schema/conductor.schema.json"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run build -w @devflow/core --prefix ../.. && npm run build",
+    "vscode:prepublish": "npm run build -w @conductor/core --prefix ../.. && npm run build",
     "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --sourcemap --minify",
-    "package": "vsce package --no-dependencies -o devflow.vsix"
+    "package": "vsce package --no-dependencies -o conductor.vsix"
   },
   "dependencies": {
-    "@devflow/core": "*"
+    "@conductor/core": "*"
   },
   "devDependencies": {
     "@types/vscode": "~1.90.0",
@@ -224,12 +224,12 @@
     "color": "#1e1e2e",
     "theme": "dark"
   },
-  "homepage": "https://github.com/Delaksan-Sritharan/DevFlow#readme",
+  "homepage": "https://github.com/Delaksan-Sritharan/Conductor#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Delaksan-Sritharan/DevFlow.git"
+    "url": "https://github.com/Delaksan-Sritharan/Conductor.git"
   },
   "bugs": {
-    "url": "https://github.com/Delaksan-Sritharan/DevFlow/issues"
+    "url": "https://github.com/Delaksan-Sritharan/Conductor/issues"
   }
 }

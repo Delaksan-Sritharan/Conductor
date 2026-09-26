@@ -10,5 +10,5 @@ Initial release.
 - Sidebar with live status, a terminal per service, start / stop / restart for all services or one.
 - Stopping goes in reverse dependency order and kills the whole process tree.
 - A failed start stops everything already started and reports why.
-- `DevFlow: Doctor` checks directories, commands, required tools and busy ports.
-- JSON schema for `.devflow/config.yaml` (autocomplete and validation with the Red Hat YAML extension).
+- `Conductor: Doctor` checks directories, commands, required tools and busy ports.
+- JSON schema for `.conductor/config.yaml` (autocomplete and validation with the Red Hat YAML extension).

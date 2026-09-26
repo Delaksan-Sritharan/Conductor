@@ -13,18 +13,18 @@ import {
   runDoctor,
   signalGroup,
   type ProjectConfig,
-} from "@devflow/core";
+} from "@conductor/core";
 import { c, colorFor, statusLine } from "./format.js";
 import { isAlive, isOurProcess, readState, removeState, writeState, type StateFile } from "./state.js";
 
 const program = new Command();
-program.name("devflow").description("Start your dev services in dependency order, each one only once the previous is ready.").version("0.1.0");
-program.option("-c, --config <path>", "path to .devflow/config.yaml (default: search upwards from the current directory)");
+program.name("conductor").description("Start your dev services in dependency order, each one only once the previous is ready.").version("0.1.0");
+program.option("-c, --config <path>", "path to .conductor/config.yaml (default: search upwards from the current directory)");
 
 function loadProject(): ProjectConfig {
   const explicit = program.opts<{ config?: string }>().config;
   const file = explicit ? path.resolve(explicit) : findConfigFile(process.cwd());
-  if (!file) throw new ConfigError(`no ${CONFIG_DIR}/config.yaml found (run \`devflow init\` to create one)`);
+  if (!file) throw new ConfigError(`no ${CONFIG_DIR}/config.yaml found (run \`conductor init\` to create one)`);
   return loadConfig(file);
 }
 
@@ -43,7 +43,7 @@ async function waitUntil(cond: () => boolean, ms: number): Promise<boolean> {
 
 program
   .command("init")
-  .description("create a starter .devflow/config.yaml in the current directory")
+  .description("create a starter .conductor/config.yaml in the current directory")
   .action(() => {
     const dir = path.join(process.cwd(), CONFIG_DIR);
     const file = path.join(dir, "config.yaml");
@@ -51,7 +51,7 @@ program
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, CONFIG_TEMPLATE);
     fs.writeFileSync(path.join(dir, ".gitignore"), "state.json\n");
-    console.log(`Created ${path.relative(process.cwd(), file)}. Edit it, then run ${c.bold("devflow start")}.`);
+    console.log(`Created ${path.relative(process.cwd(), file)}. Edit it, then run ${c.bold("conductor start")}.`);
   });
 
 // ---------------------------------------------------------------- start
@@ -67,7 +67,7 @@ program
 
     const existing = readState(project);
     if (existing && existing.cliPid !== process.pid && isAlive(existing.cliPid)) {
-      throw new Error(`devflow is already running for this project (PID ${existing.cliPid}). Use \`devflow stop\` first.`);
+      throw new Error(`conductor is already running for this project (PID ${existing.cliPid}). Use \`conductor stop\` first.`);
     }
 
     const width = Math.max(...project.services.map((s) => s.name.length));
@@ -131,20 +131,20 @@ program
 
 program
   .command("stop")
-  .description("stop a running `devflow start` for this project")
+  .description("stop a running `conductor start` for this project")
   .action(async () => {
     const project = loadProject();
     const state = readState(project);
     if (!state) return void console.log("Nothing running.");
 
     if (state.cliPid !== process.pid && isAlive(state.cliPid)) {
-      console.log(`Asking devflow (PID ${state.cliPid}) to stop services in reverse order…`);
+      console.log(`Asking conductor (PID ${state.cliPid}) to stop services in reverse order…`);
       process.kill(state.cliPid, "SIGTERM");
       if (await waitUntil(() => !isAlive(state.cliPid), 60_000)) {
         console.log("Stopped.");
         return removeState(project);
       }
-      console.error(c.yellow("devflow did not exit within 60s; cleaning up its services directly."));
+      console.error(c.yellow("conductor did not exit within 60s; cleaning up its services directly."));
     }
 
     // The starter is gone (crash / kill -9): reap any orphaned service process groups.

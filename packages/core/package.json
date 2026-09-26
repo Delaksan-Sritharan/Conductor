@@ -1,5 +1,5 @@
 {
-  "name": "@devflow/core",
+  "name": "@conductor/core",
   "version": "0.1.0",
   "description": "Dependency-aware service orchestration engine",
   "type": "module",

@@ -6,7 +6,7 @@ import { ConfigError } from "./errors.js";
 import { DependencyGraph } from "./graph.js";
 import type { ProjectConfig, ReadyCheck, ServiceConfig } from "./types.js";
 
-export const CONFIG_DIR = ".devflow";
+export const CONFIG_DIR = ".conductor";
 export const CONFIG_FILES = ["config.yaml", "config.yml"];
 const DEFAULT_TIMEOUT_SECONDS = 120;
 const NAME_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
@@ -150,7 +150,7 @@ export function loadConfig(configPath: string): ProjectConfig {
   return parseConfig(text, path.dirname(path.dirname(abs)), abs);
 }
 
-/** Walk up from `startDir` looking for `.devflow/config.yaml`. */
+/** Walk up from `startDir` looking for `.conductor/config.yaml`. */
 export function findConfigFile(startDir: string): string | undefined {
   let dir = path.resolve(startDir);
   for (;;) {
@@ -164,7 +164,7 @@ export function findConfigFile(startDir: string): string | undefined {
   }
 }
 
-export const CONFIG_TEMPLATE = `# DevFlow: start your services in dependency order, each one only after
+export const CONFIG_TEMPLATE = `# Conductor: start your services in dependency order, each one only after
 # the services it depends on are actually ready.
 #
 # wait_for options:
