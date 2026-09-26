@@ -1,0 +1,17 @@
+services:
+  entity-service:
+    path: ./entity
+    command: node server.mjs
+    wait_for: { type: port, value: 18081 }
+
+  backend:
+    path: ./backend
+    command: node server.mjs
+    depends_on: [entity-service]
+    wait_for: { type: http, url: "http://localhost:18080/health" }
+
+  frontend:
+    path: ./frontend
+    command: node server.mjs
+    depends_on: [backend]
+    wait_for: { type: output, contains: "Local:" }
