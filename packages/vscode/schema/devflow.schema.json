@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DevFlow config",
+  "type": "object",
+  "required": ["services"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "number", "description": "Config format version." },
+    "services": {
+      "description": "Services to run. Either a map of name -> service, or a list of services that each have a `name`.",
+      "oneOf": [
+        {
+          "type": "object",
+          "propertyNames": { "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+          "additionalProperties": { "$ref": "#/definitions/service" }
+        },
+        { "type": "array", "items": { "$ref": "#/definitions/service" } }
+      ]
+    }
+  },
+  "definitions": {
+    "stringOrList": {
+      "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+    },
+    "service": {
+      "type": "object",
+      "required": ["command"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Only needed in list form." },
+        "path": { "type": "string", "default": ".", "description": "Working directory, relative to the project root (the folder containing .devflow/)." },
+        "command": { "type": "string", "description": "Shell command that starts the service, e.g. `npm run dev`." },
+        "depends_on": { "$ref": "#/definitions/stringOrList", "description": "Services that must be ready before this one starts." },
+        "wait_for": { "$ref": "#/definitions/waitFor" },
+        "env": {
+          "type": "object",
+          "description": "Extra environment variables.",
+          "additionalProperties": { "type": ["string", "number", "boolean"] }
+        },
+        "timeout": { "type": "number", "exclusiveMinimum": 0, "default": 120, "description": "Seconds to wait for the service to become ready." },
+        "requires": { "$ref": "#/definitions/stringOrList", "description": "Executables that must be on PATH (checked by Doctor)." }
+      }
+    },
+    "waitFor": {
+      "description": "How DevFlow decides the service is ready. Default: the process stays alive for about a second.",
+      "anyOf": [
+        {
+          "type": "object", "required": ["type", "value"], "additionalProperties": false,
+          "properties": {
+            "type": { "const": "port" },
+            "value": { "type": "integer", "minimum": 1, "maximum": 65535, "description": "TCP port that must accept connections." },
+            "host": { "type": "string", "description": "Default: tries 127.0.0.1 and ::1." }
+          }
+        },
+        {
+          "type": "object", "required": ["type", "url"], "additionalProperties": false,
+          "properties": {
+            "type": { "const": "http" },
+            "url": { "type": "string", "format": "uri" },
+            "status": { "type": "integer", "description": "Exact status code required. Default: any 2xx or 3xx." }
+          }
+        },
+        {
+          "type": "object", "required": ["type"], "additionalProperties": false,
+          "properties": {
+            "type": { "const": "output" },
+            "contains": { "type": "string", "description": "Text that must appear in the logs." },
+            "regex": { "type": "string", "description": "Regular expression that must match a log line." }
+          }
+        },
+        { "type": "object", "required": ["type"], "additionalProperties": false, "properties": { "type": { "const": "exit" } }, "description": "Ready when the process exits with code 0 (migrations, seeds)." },
+        { "type": "object", "required": ["type"], "additionalProperties": false, "properties": { "type": { "const": "none" } } }
+      ],
+      "defaultSnippets": [
+        { "label": "port", "body": { "type": "port", "value": "^$1" } },
+        { "label": "http", "body": { "type": "http", "url": "http://localhost:$1/health" } },
+        { "label": "output", "body": { "type": "output", "contains": "$1" } },
+        { "label": "exit", "body": { "type": "exit" } }
+      ]
+    }
+  }
+}

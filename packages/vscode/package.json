@@ -1,0 +1,235 @@
+{
+  "name": "devflow-vscode",
+  "displayName": "DevFlow – Service Orchestrator",
+  "description": "Start your dev services in dependency order, each one only once the previous is actually ready.",
+  "version": "0.1.0",
+  "publisher": "delaksan-sritharan",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other",
+    "Debuggers"
+  ],
+  "keywords": [
+    "services",
+    "orchestration",
+    "dev environment",
+    "microservices",
+    "monorepo",
+    "startup order",
+    "health check",
+    "docker compose alternative",
+    "run all",
+    "multi service"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "workspaceContains:.devflow/config.yaml",
+    "workspaceContains:.devflow/config.yml"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "devflow.startAll",
+        "title": "Start All",
+        "category": "DevFlow",
+        "icon": "$(play)"
+      },
+      {
+        "command": "devflow.stopAll",
+        "title": "Stop All",
+        "category": "DevFlow",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "devflow.restartAll",
+        "title": "Restart All",
+        "category": "DevFlow",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "devflow.startService",
+        "title": "Start Service (with dependencies)",
+        "category": "DevFlow",
+        "icon": "$(play)"
+      },
+      {
+        "command": "devflow.stopService",
+        "title": "Stop Service (and dependents)",
+        "category": "DevFlow",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "devflow.restartService",
+        "title": "Restart Service",
+        "category": "DevFlow",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "devflow.showLogs",
+        "title": "Show Service Logs",
+        "category": "DevFlow",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "devflow.doctor",
+        "title": "Doctor (check environment)",
+        "category": "DevFlow",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "devflow.openConfig",
+        "title": "Open Config",
+        "category": "DevFlow",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "devflow.init",
+        "title": "Create Config",
+        "category": "DevFlow"
+      },
+      {
+        "command": "devflow.refresh",
+        "title": "Reload Config",
+        "category": "DevFlow",
+        "icon": "$(refresh)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "devflow",
+          "title": "DevFlow",
+          "icon": "media/devflow.svg"
+        }
+      ]
+    },
+    "views": {
+      "devflow": [
+        {
+          "id": "devflow.services",
+          "name": "Services"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "devflow.services",
+        "contents": "No DevFlow config found in this workspace.\n[Create Config](command:devflow.init)\nDescribe your services once in `.devflow/config.yaml`, then start them all in the right order with one click.",
+        "when": "!devflow.hasConfig"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "devflow.startAll",
+          "when": "view == devflow.services && devflow.hasConfig && !devflow.active",
+          "group": "navigation@1"
+        },
+        {
+          "command": "devflow.stopAll",
+          "when": "view == devflow.services && devflow.hasConfig && devflow.active",
+          "group": "navigation@1"
+        },
+        {
+          "command": "devflow.restartAll",
+          "when": "view == devflow.services && devflow.hasConfig && devflow.active",
+          "group": "navigation@2"
+        },
+        {
+          "command": "devflow.doctor",
+          "when": "view == devflow.services && devflow.hasConfig",
+          "group": "navigation@3"
+        },
+        {
+          "command": "devflow.openConfig",
+          "when": "view == devflow.services && devflow.hasConfig",
+          "group": "navigation@4"
+        },
+        {
+          "command": "devflow.refresh",
+          "when": "view == devflow.services",
+          "group": "navigation@5"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "devflow.showLogs",
+          "when": "view == devflow.services && viewItem =~ /^service\\./",
+          "group": "inline@1"
+        },
+        {
+          "command": "devflow.startService",
+          "when": "view == devflow.services && viewItem == service.inactive",
+          "group": "inline@2"
+        },
+        {
+          "command": "devflow.restartService",
+          "when": "view == devflow.services && viewItem == service.active",
+          "group": "inline@2"
+        },
+        {
+          "command": "devflow.stopService",
+          "when": "view == devflow.services && viewItem == service.active",
+          "group": "inline@3"
+        },
+        {
+          "command": "devflow.startService",
+          "when": "view == devflow.services && viewItem == service.inactive",
+          "group": "1_run@1"
+        },
+        {
+          "command": "devflow.restartService",
+          "when": "view == devflow.services && viewItem == service.active",
+          "group": "1_run@1"
+        },
+        {
+          "command": "devflow.stopService",
+          "when": "view == devflow.services && viewItem == service.active",
+          "group": "1_run@2"
+        },
+        {
+          "command": "devflow.showLogs",
+          "when": "view == devflow.services && viewItem =~ /^service\\./",
+          "group": "2_view@1"
+        }
+      ]
+    },
+    "yamlValidation": [
+      {
+        "fileMatch": [
+          ".devflow/config.yaml",
+          ".devflow/config.yml"
+        ],
+        "url": "./schema/devflow.schema.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build -w @devflow/core --prefix ../.. && npm run build",
+    "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --sourcemap --minify",
+    "package": "vsce package --no-dependencies -o devflow.vsix"
+  },
+  "dependencies": {
+    "@devflow/core": "*"
+  },
+  "devDependencies": {
+    "@types/vscode": "~1.90.0",
+    "@vscode/vsce": "^4.0.0"
+  },
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1e1e2e",
+    "theme": "dark"
+  },
+  "homepage": "https://github.com/Delaksan-Sritharan/DevFlow#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Delaksan-Sritharan/DevFlow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Delaksan-Sritharan/DevFlow/issues"
+  }
+}
