@@ -1,0 +1,19 @@
+{
+  "name": "@devflow/cli",
+  "version": "0.1.0",
+  "description": "devflow command line interface",
+  "type": "module",
+  "bin": {
+    "devflow": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "@devflow/core": "*"
+  }
+}
