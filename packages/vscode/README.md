@@ -8,6 +8,10 @@ entity-service ──► backend ──► frontend
    port 8081       /health      "Local:" in logs
 ```
 
+![Conductor starting three services in dependency order](https://raw.githubusercontent.com/Delaksan-Sritharan/Conductor/main/docs/demo.png)
+
+*Real output of the Conductor engine on the bundled demo project; the sidebar and terminals in VS Code are driven by the same engine.*
+
 Describe your services once in `.conductor/config.yaml`, commit it, and everyone on the team boots the same way.
 
 ## Features

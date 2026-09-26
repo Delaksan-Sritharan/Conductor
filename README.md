@@ -8,6 +8,10 @@ entity-service ──► backend ──► frontend
    port 8081       /health      "Local:" in logs
 ```
 
+![Conductor starting three services in dependency order](docs/demo.png)
+
+*Real output of `conductor start` on [examples/demo](examples/demo). Each service is started only after the previous one is ready.*
+
 ## Quick start
 
 ```bash
