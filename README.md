@@ -12,6 +12,8 @@ entity-service ──► backend ──► frontend
 
 *Real output of `conductor start` on [examples/demo](examples/demo). Each service is started only after the previous one is ready.*
 
+**New here? Read the [setup guide](GUIDE.md)** — install, first config, controlling start order, and troubleshooting.
+
 ## Quick start
 
 ```bash

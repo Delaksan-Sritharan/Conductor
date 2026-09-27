@@ -24,6 +24,9 @@ Describe your services once in `.conductor/config.yaml`, commit it, and everyone
 - **Doctor.** Checks directories, commands, required tools and busy ports before you start.
 - **Config autocomplete and validation** (install the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) by Red Hat).
 
+**Full walkthrough:** [setup guide](https://github.com/Delaksan-Sritharan/Conductor/blob/main/GUIDE.md) — covers
+controlling start order, picking a `wait_for`, and troubleshooting.
+
 ## Getting started
 
 1. Open your project folder.
