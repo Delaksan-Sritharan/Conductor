@@ -2,7 +2,7 @@
   "name": "conductor-vscode",
   "displayName": "Conductor – Service Orchestrator",
   "description": "Start your dev services in dependency order, each one only once the previous is actually ready.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "delaksan-sritharan",
   "license": "MIT",
   "engines": {

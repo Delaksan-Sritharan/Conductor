@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Docs: link the new [setup guide](https://github.com/Delaksan-Sritharan/Conductor/blob/main/GUIDE.md)
+  from the listing (install, first config, controlling start order, troubleshooting).
+
 ## 0.1.0
 
 Initial release.
